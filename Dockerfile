@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
-copy . .
+COPY . .
 
 RUN javac Test.java
 
