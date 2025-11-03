@@ -1,26 +1,32 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("compile"){
-            steps{
+    
+    tools {
+        jdk 'jdk17'  
+    }
+    
+    stages {
+        stage('Build') {
+            steps {
                 sh 'javac Test.java'
-            }
-        }
-        stage("run"){
-            steps{
                 sh 'java Test'
             }
         }
-    }
-    post{
-        always{
-            sh 'echo "Alway"'
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t my-java-app .'
+                }
+            }
         }
-        success{
-            sh 'echo "Success"'
-        }
-        failure{
-            'echo "Failure"'
+        
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh 'docker run --rm my-java-app'
+                }
+            }
         }
     }
 }
